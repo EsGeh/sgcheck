@@ -1,0 +1,111 @@
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
+. ./sg_check.global
+
+CMD_EXIT="exit"
+	
+# Functions:
+
+function remove
+{
+	if [ "$1" == "" ] ; then
+		echo -n "enter filename: "
+		read filename
+	else
+		filename=$1
+	fi
+	echo -n "are you shure? (y/n) "
+	read answer
+	case $answer in
+		y ) ;;
+		n ) return 0 ;;
+		* ) echo "invalid input. quit current operation..." 
+			return 1 ;;
+	esac
+	rm -r "$THIS_BASE$filename"
+	#if [ -d "THIS_BASE$filename" ] ; then
+		#echo "rmdir $THIS_BASE$filename"
+		#rmdir "$THIS_BASE$filename"
+	#elif [ -f "$THIS_BASE$filename" ] ; then # if the file is a regular file
+		#echo "rm $THIS_BASE$filename"
+		#rm "$THIS_BASE$filename"
+	#else
+		#echo "error!: $THIS_BASE$filename is neither a file or a directory!"
+		#return 1
+	#fi
+	removeFromList "$filename"
+}
+
+function removeFromList
+{
+	if [ "$1" == "" ] ; then
+		echo -n "enter filename: "
+		read filename
+		echo -n "are you shure? (y/n) "
+		read answer
+		case $answer in
+			y ) ;;
+			n ) return 0 ;;
+			* ) echo "invalid input. quit current operation..." 
+				return 1 ;;
+		esac
+
+	else
+		filename="$1"
+	fi
+	
+	echo "rm $SETTINGS_FOLDER$filename.sg_descr"
+	rm "$SETTINGS_FOLDER$filename.sg_descr"
+}
+
+while [ "$1" != "" ]; do
+	case "$1" in
+		"--settings" )
+			shift
+			settingsDir="$1"
+			;;
+		* ) echo "unknown option!" ; exit 1
+	esac
+	shift
+done
+if [ "$settingsDir" != "" ]; then
+	setSettingsFolder "$settingsDir"
+	#if [ $? != 0 ]; then
+		#echo "settings dir not found!"
+		#exit 1
+	#fi
+fi
+
+# load settings:
+init
+if [ $? != 0 ]; then
+	echo "settings file not found!"
+	exit 1
+fi
+
+selection=
+until [ "$selection" = "$CMD_EXIT" ]; do
+	clear
+	echo -e "************************************"
+	echo -e "* sg_check.list                    *"
+	echo -e "************************************"
+	echo -e "listing files at $THIS_BASE:"
+	./sg_check.list
+
+	echo -e "\t[1]: remove a file (!)"
+	echo -e "\t[2]: remove a file from list(!)"
+	echo "enter 1..4 to change a setting, or \"$CMD_EXIT\" to exit"
+	echo -e "************************************"
+	read selection
+	case $selection in
+		1 ) remove ;;
+		2 ) removeFromList ;;
+		$CMD_EXIT ) ;;
+		* ) echo "command not found!"
+	esac
+done

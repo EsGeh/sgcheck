@@ -1,0 +1,132 @@
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
+. ./sg_check.global
+
+CMD_EXIT="exit"
+
+
+details=0
+	
+# Functions:
+function listFiles
+{
+	# IMPORTANT: the output marks a file/dir with '*', if it has been changed more recently. For folders, this means only that the structure of its subtree has changed, but not that the content of a file in this directory has changed!
+	if [ "$SERVER" != "" ] ; then
+		#to do: test, if server is reachable
+		echo "WARNING: Server might be not online. So no information is shown about which file/directory is the most recent! ..."
+	fi
+	#now:
+	# simulate updating each (listed) file on to the server
+	# and calculate the output for the user, depending on the list of files, that rsync shows,....
+	ls --hide settings "$SETTINGS_FOLDER" | 
+	while read line
+	do
+		local filename=$(echo "$line" | sed s/.sg_descr//) # delete describtion file ending
+		echo -en "$filename"
+		#getDestCheckInDir "$filename"
+		getOrigin "$filename"
+		prependServer "$__result"
+		#destCheckIn="$__result"
+		origin="$__result"
+		getOriginDir "$filename"
+		prependServer "$__result"
+		originDir="$__result"
+		#echo "destCheckIn: $destCheckIn"
+		
+		# show a '*', if the file has changed
+		# if a directory:
+		# also print a list of files, that have changed
+		countMax=50
+		count=0
+		hasChanged=0
+		while read file ; do
+			if [ $count = 0 ]; then
+				hasChanged=1
+				echo -en "*"
+				if [ $details = 1 ]; then
+					echo -en " (\n"
+				fi
+			fi
+			if [ $details = 1 -a $count -lt $countMax ]; then
+				echo -en "\t'$file'\n"
+			fi
+			count=$((count + 1))
+		#done < <($CMD_COPY -simulate -list -max-depth "$THIS_BASE$filename" "$originDir" | sed '/^\./d')
+		done < <($CMD_COPY -simulate -list "$THIS_BASE$filename" "$originDir")
+		if [ $hasChanged = 1 ]; then
+			if [ $count -gt $countMax ]; then
+				echo -en "\t...\n"
+			fi
+			echo -en "\t($count files)\n"
+			if [ $details = 1 ]; then
+				echo -en ")\n"
+			fi
+		else
+			echo -en "\n"
+		fi
+
+		# warn the user, if a file has been manipulated on the server:
+		# if a directory:
+		# also print a list of files, that are more recent on the server
+		countMax=50
+		count=0
+		hasChanged=0
+		while read file ; do
+			if [ $count = 0 ]; then
+				hasChanged=1
+				echo -en "WARNING: the following files have been edited on the server!\n"
+			fi
+			if [ $count -lt $countMax ]; then
+				echo -en "\t'$file'\n"
+			fi
+				
+			count=$((count + 1))
+		done < <($CMD_COPY -simulate -list -max-depth "$origin" "$THIS_BASE" | sed '/^\./d' )
+		if [ $hasChanged = 1 ]; then
+			if [ $count -gt $countMax ]; then
+				echo -en "\t...\n"
+			fi
+			echo -en "\t($count files)\n"
+			echo -en "\n"
+		fi
+	done
+}
+
+# read options:
+while [ "$1" != "" ]; do
+	case "$1" in
+		"--settings" )
+			shift
+			settingsDir="$1"
+			;;
+		"-details" )
+			shift
+			details=1
+			# echo "details enabled!"
+			;;
+		* ) echo "unknown option!" ; exit 1
+	esac
+	shift
+done
+if [ "$settingsDir" != "" ]; then
+	setSettingsFolder "$settingsDir"
+	#if [ $? != 0 ]; then
+		#echo "settings dir not found!"
+		#exit 1
+	#fi
+fi
+
+
+# load settings:
+init
+if [ $? != 0 ]; then
+	echo "settings file not found!"
+	exit 1
+fi
+
+listFiles

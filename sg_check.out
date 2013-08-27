@@ -1,0 +1,116 @@
+
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
+#include global functions
+. ./sg_check.global
+
+#variables
+# to be set by user input:
+	RSYNC_OPTIONS=
+	SRC=
+	DEST=
+#others:
+	interactive=1 
+	SIMULATE=0
+
+#functions:
+function addToList #$1:origin (relative to SERVER_BASE)
+{
+	local SRC="$1"
+	echo "SRC: $SRC"
+	# last component of filename:
+	local baseNameTemp=$(basename "$SRC")
+	#baseNameTemp="$($baseNameTemp)"
+	local SRC_FILE="$baseNameTemp"
+	#echo "SRC_FILE: $SRC_FILE"
+	cd "$SETTINGS_FOLDER"
+	> "$SRC_FILE.sg_descr"
+	echo "ORIGIN=\"$SRC\"" >> "$SRC_FILE.sg_descr"
+}
+
+
+RSYNC_OPTIONS="-verbose -printcmd"
+# read params:
+interactive="1"
+if [ $# -gt 0 ]; then
+	#read options:
+	while [ $# -gt 0 ]; do
+		case "$1" in
+			"--settings" )
+				shift
+				settingsDir="$1"
+				;;
+			* )
+				RSYNC_OPTIONS="$RSYNC_OPTIONS"" $1"
+				interactive="0"
+				
+			#"-destructive")
+				#echo "settings options for update!"
+				#RSYNC_OPTIONS="$RSYNC_OPTIONS"" --delete"
+				#;;
+			#"-simulate" )
+				#RSYNC_OPTIONS="$RSYNC_OPTIONS"" --list-only"
+				#SIMULATE=1
+				#;;
+			#*) break # echo "\"$1\": option not found!"
+		esac
+		shift
+	done
+fi
+if [ "$settingsDir" != "" ]; then
+	setSettingsFolder "$settingsDir"
+	#if [ $? != 0 ]; then
+		#echo "settings dir not found!"
+		#exit 1
+	#fi
+fi
+
+# load settings:
+init
+if [ $? != 0 ]; then
+	echo "settings file not found!"
+	exit 1
+fi
+
+
+if [ $interactive == "0" ]; then
+	if [ $# != 1 ]; then
+		echo "wrong parameters"
+		exit 1
+	fi
+	#read params:
+	if [ "$1" != "" ]; then
+		SRC="$1"
+	fi
+fi
+if [ $interactive != "0" ]; then
+	echo -en "enter a folder/file to check out:\n$SERVER_BASE"
+	read SRC
+	echo "enter additional options:"
+	echo "-destructive, -simulate(, or nothing)"
+	read RSYNC_OPTIONS_
+	RSYNC_OPTIONS="$RSYNC_OPTIONS"" $RSYNC_OPTIONS_"
+fi
+
+# the actual source is SERVER_BASE || SRC
+SRC_FULL="$SERVER_BASE$SRC"
+# SERVERBASE || SRC is split into SRC_BASE and SRC_FILE
+#SRC_BASE=$(dirname "$SRC_FULL") 
+# SRC_FILE=$(basename "$SRC_FULL")
+
+if [ "$SERVER" != "" ] ; then
+	SRC_RSYNC=samuel@"$SERVER:$SRC_FULL"
+else
+	SRC_RSYNC="$SRC_FULL"
+fi
+#echo executing \'$CMD_COPY $RSYNC_OPTIONS "$SRC_RSYNC" "$THIS_BASE"\'
+$CMD_COPY --settings "$settingsDir" $RSYNC_OPTIONS "$SRC_RSYNC" "$THIS_BASE"
+if [ $SIMULATE == 0 ]; then
+	addToList "$SRC" #$SRC_FILE
+fi
+#scp -r "samuel@$SERVER:\"$SERVER_BASE$SRC\"" "$THIS_BASE"

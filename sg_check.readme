@@ -1,0 +1,51 @@
+
+global settings:
+	SERVER: ip adress of the server
+		if empty: SERVER_BASE is located on this pc
+	THIS: ip adress of this pc
+		can be empty, if SERVER is empty as well
+	SERVER_BASE: the directory on the server considered relevant for sg_check. Every filename given as a parameter to a sg_check command is interpreted relative to this directory, if given at a place where a location on the SERVER is expected.
+	THIS_BASE: the directory on THIS pc considered relevant for sg_check. Every filename given as a parameter to a sg_check command where a location on THIS pc is expected, is interpreted relative to this directory.
+
+sg_check.setup
+	manipulate program settings. 
+
+sg_check.list [OPTION... ]
+	print files/folders that have been checked out from the server
+	OPTIONS:
+		-details:
+			print more details about the files that have been changed locally
+
+sg_check.out [OPTION... ] FILE_ON_THE_SERVER
+	if used without options and parameters: interactive mode
+	values for OPTION:
+		-default: 
+		-destructive:
+		-simulate:
+		and any options for rsync (deprecated)
+	action: copy FILE_ON_SERVER to THIS pc and add it to the list
+
+sg_check.in [OPTION... ] FILE
+	FILE 
+
+sg_check.cp [OPTION... ] SRC DEST
+	OPTIONS:
+		--settings SETTINGS_FOLDER
+			should end with a /!!
+		-printcmd
+			also print the actual command used to copy the files
+		-destructive
+			delete files that don't exist at the destination
+			(rsync: "--delete")
+		-simulate
+			simulate, but don't make any changes
+			(rsync: "-n")
+		-checksum
+			only copy, if checksum differs, ignore timestamps
+			(rsync: "-c --ignore-times")
+		-list
+			output a more detailed list of the actions being applied
+			(rsync: "--out-format=%i%n")
+		-max-depth
+			only descend to directories until a depth of ??
+			(rsync: "--exclude=/*/*/*/*")

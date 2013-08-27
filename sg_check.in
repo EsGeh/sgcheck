@@ -1,0 +1,100 @@
+
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
+#include global functions
+. ./sg_check.global
+
+#variables
+# to be set by user input:
+	SRC=
+	DEST=
+
+#functions:
+
+RSYNC_OPTIONS="-verbose -printcmd"
+# read params:
+interactive="1"
+if [ $# -gt 0 ]; then
+	#read options:
+	while [ $# -gt 1 ]; do
+		case "$1" in
+			"--settings" )
+				shift
+				settingsDir="$1"
+				;;
+			* )
+				RSYNC_OPTIONS="$RSYNC_OPTIONS"" $1"
+				interactive="0"
+				
+			#"-destructive")
+				#echo "settings options for update!"
+				#RSYNC_OPTIONS="$RSYNC_OPTIONS"" --delete"
+				#;;
+			#"-simulate" )
+				#RSYNC_OPTIONS="$RSYNC_OPTIONS"" --list-only"
+				#SIMULATE=1
+				#;;
+			#*) break # echo "\"$1\": option not found!"
+		esac
+		shift
+	done
+fi
+if [ $interactive == "0" ]; then
+	if [ $# != 1 ]; then
+		echo "wrong parameters"
+		exit 1
+	fi
+	#read params:
+	if [ "$1" != "" ]; then
+		SRC="$1"
+		if [ ! -e "$SRC" ]; then
+			echo "File '$SRC' not found!"
+			exit 1
+		fi
+	fi
+fi
+
+echo "$settingsDir"
+if [ "$settingsDir" != "" ]; then
+	setSettingsFolder "$settingsDir"
+	#if [ $? != 0 ]; then
+		#echo "settings dir not found!"
+		#exit 1
+	#fi
+fi
+
+# load settings:
+init
+if [ $? != 0 ]; then
+	echo "settings file not found!"
+	exit 1
+fi
+
+if [ $interactive != "0" ]; then
+	echo -en "enter a folder/file to check in:\n$THIS_BASE"
+	read SRC
+	echo "enter additional options:"
+	echo "-destructive, -simulate(, or nothing)"
+	read RSYNC_OPTIONS_
+	RSYNC_OPTIONS="$RSYNC_OPTIONS"" $RSYNC_OPTIONS_"
+fi
+
+#echo "Hi"
+
+getOriginDir "$SRC"
+prependServer "$__result"
+DEST="$__result"
+echo "dest: $DEST"
+#if [ "$SERVER" != "" ] ; then
+	#DEST_RSYNC=samuel@"$SERVER:$DEST"
+#else
+	#DEST_RSYNC="$DEST"
+#fi
+
+#echo "excecuting" \'$CMD_COPY $RSYNC_OPTIONS "$THIS_BASE$SRC" "$DEST_RSYNC"\'
+$CMD_COPY --settings "$settingsDir" $RSYNC_OPTIONS "$THIS_BASE$SRC" "$DEST" 

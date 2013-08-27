@@ -1,0 +1,152 @@
+# Setting variables (loaded by using the "init" function):
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
+CMD_EXIT="exit"
+
+# include global functions
+. ./sg_check.global
+
+
+# Variables
+# from the settings file:
+	
+# Functions:
+function saveSettings # save settings to file
+{
+	# cd ~
+	# mkdir .sg_check.settings
+	cd $SETTINGS_FOLDER #.sg_check.settings
+	> $SETTINGS_FILE
+	echo "SERVER=\"$SERVER\"" >> $SETTINGS_FILE
+	echo "THIS=\"$THIS\"" >> $SETTINGS_FILE
+	echo "SERVER_BASE=\"$SERVER_BASE\"" >> $SETTINGS_FILE
+	echo "THIS_BASE=\"$THIS_BASE\"" >> $SETTINGS_FILE
+}
+
+function remove
+{
+	if [ "$1" == "" ] ; then
+		echo -n "enter filename: "
+		read filename
+	else
+		filename=$1
+	fi
+	echo -n "are you shure? (y/n) "
+	read answer
+	case $answer in
+		y ) ;;
+		n ) return 0 ;;
+		* ) echo "invalid input. quit current operation..." 
+			return 1 ;;
+	esac
+	rm -r "$THIS_BASE$filename"
+	#if [ -d "THIS_BASE$filename" ] ; then
+		#echo "rmdir $THIS_BASE$filename"
+		#rmdir "$THIS_BASE$filename"
+	#elif [ -f "$THIS_BASE$filename" ] ; then # if the file is a regular file
+		#echo "rm $THIS_BASE$filename"
+		#rm "$THIS_BASE$filename"
+	#else
+		#echo "error!: $THIS_BASE$filename is neither a file or a directory!"
+		#return 1
+	#fi
+	removeFromList "$filename"
+}
+
+function removeFromList
+{
+	if [ "$1" == "" ] ; then
+		echo -n "enter filename: "
+		read filename
+		echo -n "are you shure? (y/n) "
+		read answer
+		case $answer in
+			y ) ;;
+			n ) return 0 ;;
+			* ) echo "invalid input. quit current operation..." 
+				return 1 ;;
+		esac
+
+	else
+		filename="$1"
+	fi
+	
+	echo "rm $SETTINGS_FOLDER$filename.sg_descr"
+	rm "$SETTINGS_FOLDER$filename.sg_descr"
+}
+
+# read options:
+while [ "$1" != "" ]; do
+	case "$1" in
+		"--settings" )
+			shift
+			settingsDir="$1"
+			;;
+		* ) echo "unknown option!" ; exit 1
+	esac
+	shift
+done
+if [ "$settingsDir" != "" ]; then
+	setSettingsFolder "$settingsDir"
+	#if [ $? != 0 ]; then
+		#echo "settings dir not found!"
+		#exit 1
+	#fi
+fi
+					
+# create folder settings folder and file, if not yet existing:
+init
+if [ $? != "0" ]; then
+	echo -en "settings folder not found!\ncreate one? (y/n)"
+	read answer
+	case $answer in
+		y ) mkdir $SETTINGS_FOLDER
+			> $SETTINGS_FILE ;;
+		* ) exit 1 ;;
+	esac
+	init
+
+fi
+
+selection=
+until [ "$selection" = "$CMD_EXIT" ]; do
+	clear
+	echo -e "************************************"
+	echo -e "* sg_check.setup                   *"
+	echo -e "************************************"
+	echo -e "Current Settings:"
+	echo -e "\t[1]: SERVER: $SERVER"
+	echo -e "\t[2]: THIS: $THIS"
+	echo -e "\t[3]: SERVER_BASE: $SERVER_BASE"
+	echo -e "\t[4]: THIS_BASE: $THIS_BASE"
+	echo "enter 1..4 to change a setting, or \"$CMD_EXIT\" to exit"
+	echo -e "************************************"
+	read selection
+	case $selection in
+		1 )
+			echo -n "please enter ip for the SERVER: " 
+			read SERVER
+			;;
+		2 ) 
+			echo -n "please enter ip of this pc: " 
+			read THIS
+			;;
+		3 ) 
+			echo -n "please enter the base dir on the SERVER: " 
+			read SERVER_BASE
+			;;
+		4 )
+			echo -n "please enter the base dir on this pc: " 
+			read THIS_BASE
+			;;
+		$CMD_EXIT ) ;;
+		* ) echo "command not found!"
+	esac
+done
+
+saveSettings

@@ -1,0 +1,166 @@
+#!/bin/bash
+
+
+
+if [ "$SETTINGS_FOLDER" = "" ]; then
+	SETTINGS_FOLDER="$HOME/.sg_check.settings/"
+	SETTINGS_FILE="$SETTINGS_FOLDER""settings"
+fi
+
+#constants:
+CMD_COPY="$HOME/data/scripts/sg_check/sg_check.cp"
+
+
+# Variables
+# from the settings file:
+	SERVER= # <- settings
+	THIS= # <- settings
+
+	SERVER_BASE= # <- settings
+	THIS_BASE= #  <- settings
+
+function setSettingsFolder
+{
+	#if [ ! -e "$1" ]
+	#then
+		#return 1
+	#fi
+	SETTINGS_FOLDER="$1"
+	SETTINGS_FILE="$SETTINGS_FOLDER""settings"
+	return 0
+}
+
+# try to load settings from file.
+# return 0 on success, 1 otherwise
+function init
+{ 
+	if [ ! -e "$SETTINGS_FOLDER" ]
+	then
+		# echo "FILE NOT EXISTENT"
+		return 1
+	fi
+	
+	# load settings:
+	# echo "settings file: $SETTINGS_FILE"
+	eval $(cat $SETTINGS_FILE)
+
+	return 0
+}
+
+#calculates the dest parameter for RSYNC to be used for checking a file in to the server
+#important: a directory is returned!
+# (trailing '/' seem to be possible but don't change anything)
+function prependServer # $1: file
+{
+	local file="$1"
+	#echo "Ho"
+	#getOriginJustPath "$1"
+	#local destCheckIn="$__result"
+	if [ "$SERVER" != "" ]; then
+		file=samuel@"$SERVER:$file"
+	fi
+	__result="$file"
+	#echo "$destCheckIn"
+}
+
+function getOriginDir
+{
+	getOrigin "$1"
+	local origin="$__result"
+	#we want the folder, not the whole path:
+	if [ "$origin" != "$SERVER_BASE" ]; then
+		origin=$(dirname "$origin")
+	fi
+	__result="$origin"
+}
+
+function getOrigin
+{
+	local file="$1"
+	local origin=
+	#load ORIGIN from the describtion path
+	local describtionPath=
+	if [ "$file" != "" ]; then
+		describtionPath="$SETTINGS_FOLDER"$(basename "$file").sg_descr
+	else
+		describtionPath="$SETTINGS_FOLDER".sg_descr
+	fi
+	if [ -f "$describtionPath" ]; then
+		eval $(cat "$describtionPath")
+	else
+		echo -n "describtion file not found! please enter the origin path (relative to SERVER_BASE): "
+		read ORIGIN
+	fi
+	origin="$SERVER_BASE$ORIGIN"
+	
+	__result="$origin"
+}
+
+
+# $1: prog name
+# $2: options (these things starting with '-')
+# $3: arguments
+# enables auto-completion
+# AND
+# sets the global variable "USAGE_MESSAGE"
+function setCurrentCommand ()
+{
+	
+	setComplete "$1" "$2" "$3"
+	setUsageMsg "$1" "$2" "$3"
+}
+
+function setUsageMsg ()
+{
+	USAGE_MESSAGE="$1"
+	_options="$2"
+	_arguments="$3"
+	if [ "$_options" != "" ]; then
+		USAGE_MESSAGE="$USAGE_MESSAGE [OPTIONS]"
+	fi
+	if [ "$_arguments" != "" ]; then
+		USAGE_MESSAGE="$USAGE_MESSAGE ARGS"
+	fi
+	if [ "$_options" != "" ]; then
+		USAGE_MESSAGE="$USAGE_MESSAGE\n\tOPTONS:\n\t\t"
+		USAGE_MESSAGE="$USAGE_MESSAGE$_options"
+	fi
+	if [ "$_arguments" != "" ]; then
+		USAGE_MESSAGE="$USAGE_MESSAGE\n\tARGS:\n\t\t"
+		USAGE_MESSAGE="$USAGE_MESSAGE$_arguments"
+	fi
+}
+
+# $1: prog name
+# $2: options (these things starting with '-')
+# $3: arguments
+function setComplete ()
+{
+	local prog="$1"
+	_options="$2"
+	_arguments="$3"
+	complete -F _completeF "$prog"
+}
+
+
+_options=""
+_arguments=""
+
+function _completeF ()
+{
+	local cur
+	COMPREPLY=() # the return value
+
+	#_arguments="-bli -bla --"
+
+	#cur="$2"
+	cur=${COMP_WORDS[COMP_CWORD]}
+	#echo "options: $_options, arguments: $_arguments"
+	
+	 case "$cur" in
+		-*) COMPREPLY=( $(compgen -W "$_options" -- $cur ) );;
+		*) COMPREPLY=( $(compgen -W "$_arguments" -- $cur ) );;
+	esac
+
+	return 0
+}
