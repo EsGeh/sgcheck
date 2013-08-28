@@ -1,5 +1,24 @@
 
 
+all functions rely on the following variables to be defined
+	SETTINGS_FOLDER:
+	SETTINGS_FILE
+	CMD_COPY
+	(global settings: )
+	SERVER
+	THIS
+	SERVER_BASE
+	THIS_BASE
+
+all modules import ./bin/util/global
+doing so, loads default values for 
+	SETTINGS_FOLDER
+	SETTINGS_FILE
+	CMD_COPY
+but the settings information is still empty. scripts should call the 'init' function, to load them from the settings folder.
+(Using an other settings folder can be achieved by setting 'SETTINGS_FOLDER' and/or 'SETTINGS_FILE' manually, after having imported './bin/util/global'.)
+
+
 global settings:
 	SERVER: ip adress of the server
 		if empty: SERVER_BASE is located on this pc

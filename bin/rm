@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
+. ./bin/util/global
+. ./bin/util/filesUtil
+
+
+
+mode="list"
+
+# 1. read options:
+while [ "$1" != "" ]; do
+	case "$1" in
+		"--settings" )
+			shift
+			settingsDir="$1"
+			;;
+		"--file" )
+			mode="file"
+			;;
+		"--list" )
+			mode="list"
+			;;
+		* ) echo "unknown option!" ; exit 1
+	esac
+	shift
+done
+if [ "$settingsDir" != "" ]; then
+	setSettingsFolder "$settingsDir"
+fi
+
+case $mode in
+	"file") removeI ;;
+	"list") removeFromListI ;;
+	* ) echo "internal error. abort"
+esac

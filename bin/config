@@ -13,12 +13,6 @@ CMD_EXIT="exit"
 . ./bin/util/settingsUtil
 
 
-# Variables
-# from the settings file:
-	
-# Functions:
-
-
 # read options:
 while [ "$1" != "" ]; do
 	case "$1" in
