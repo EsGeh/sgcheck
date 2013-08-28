@@ -1,0 +1,40 @@
+#!/bin/bash
+# Functions to work with the settings file:
+
+
+
+function setSettingsFolder
+{
+	#if [ ! -e "$1" ]
+	#then
+		#return 1
+	#fi
+	SETTINGS_FOLDER="$1"
+	SETTINGS_FILE="$SETTINGS_FOLDER""settings"
+	return 0
+}
+
+
+# load settings from settings file:
+# precondition: the settings file must exist!
+function loadSettingsFile ()
+{
+	# echo "settings file: $SETTINGS_FILE"
+	eval $(cat $SETTINGS_FILE)
+	return 0
+}
+
+# write important variables to settings file
+function saveSettings # save settings to file
+{
+	# cd ~
+	# mkdir .sg_check.settings
+	cd $SETTINGS_FOLDER #.sg_check.settings
+	> $SETTINGS_FILE
+	echo "SERVER=\"$SERVER\"" >> $SETTINGS_FILE
+	echo "THIS=\"$THIS\"" >> $SETTINGS_FILE
+	echo "SERVER_BASE=\"$SERVER_BASE\"" >> $SETTINGS_FILE
+	echo "THIS_BASE=\"$THIS_BASE\"" >> $SETTINGS_FILE
+
+	return 0
+}

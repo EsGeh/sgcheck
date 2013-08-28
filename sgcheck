@@ -1,0 +1,37 @@
+#!/bin/bash
+
+subscript="$1"
+
+if [ ! "$subscript" = "" ]; then
+	_execCommand
+fi
+
+function _execCommand ()
+{
+	./bin/$subscript
+}
+
+
+
+clear
+echo -e "************************************"
+echo -e "* sgcheck                          *"
+echo -e "************************************"
+
+
+# complete -F _compFunc
+
+selection=
+until [ "selection" = "$CMD_EXIT" ]; do
+
+	echo -en "> "
+	read selection
+	if [ ! -e "./bin/$selection" ]; then
+		echo -e "invalid command!"
+	else
+		echo "gonna execute ./bin/$selection"
+		./bin/$selection
+	fi
+done
+
+

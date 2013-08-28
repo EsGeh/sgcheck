@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#include functions to work with the settings file
+#. ./util/settingsUtil
+
+. ./bin/util/settingsUtil
+
 
 
 if [ "$SETTINGS_FOLDER" = "" ]; then
@@ -8,7 +13,7 @@ if [ "$SETTINGS_FOLDER" = "" ]; then
 fi
 
 #constants:
-CMD_COPY="$HOME/data/scripts/sg_check/sg_check.cp"
+CMD_COPY="$HOME/data/scripts/sg_check/sgcheck/sgcheck.cp"
 
 
 # Variables
@@ -19,30 +24,18 @@ CMD_COPY="$HOME/data/scripts/sg_check/sg_check.cp"
 	SERVER_BASE= # <- settings
 	THIS_BASE= #  <- settings
 
-function setSettingsFolder
-{
-	#if [ ! -e "$1" ]
-	#then
-		#return 1
-	#fi
-	SETTINGS_FOLDER="$1"
-	SETTINGS_FILE="$SETTINGS_FOLDER""settings"
-	return 0
-}
 
 # try to load settings from file.
 # return 0 on success, 1 otherwise
 function init
 { 
-	if [ ! -e "$SETTINGS_FOLDER" ]
+	if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -e "$SETTINGS_FILE" ]
 	then
 		# echo "FILE NOT EXISTENT"
 		return 1
 	fi
-	
 	# load settings:
-	# echo "settings file: $SETTINGS_FILE"
-	eval $(cat $SETTINGS_FILE)
+	loadSettingsFile
 
 	return 0
 }
@@ -59,7 +52,6 @@ function prependServer # $1: file
 	if [ "$SERVER" != "" ]; then
 		file=samuel@"$SERVER:$file"
 	fi
-	__result="$file"
 	#echo "$destCheckIn"
 }
 

@@ -92,7 +92,7 @@ selection=
 until [ "$selection" = "$CMD_EXIT" ]; do
 	clear
 	echo -e "************************************"
-	echo -e "* sg_check.list                    *"
+	echo -e "* sgcheck.edit                     *"
 	echo -e "************************************"
 	echo -e "listing files at $THIS_BASE:"
 	./sg_check.list

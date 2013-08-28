@@ -1,0 +1,64 @@
+#!/bin/bash
+
+
+#use 'source sgcheck.init' to set enable autocompletion
+
+
+CMD_EXIT="exit"
+
+# include global functions
+. ./bin/util/global
+. ./bin/util/settingsUtil
+
+# 1. copy to a specific location:
+echo -n "specify location where to install sgcheck? "
+read dest
+if [ ! -e "$dest" ]; then
+	echo -n "dest doesn't exist. create (y/n)? "
+	read input
+	if [ "$input" = "y" ]; then
+		mkdir "$dest"
+	else if [ "$input" = "n" ]; then
+		echo "installation aborted"
+		exit 1
+	else
+		echo "invalid input. installation aborted"
+		exit 1
+	fi
+	fi
+else
+	if [ ! -d "$dest" ]; then
+		echo "error: not a directory!"
+		exit 1
+	fi
+fi
+echo "copying files..."
+cp -r ./sgcheck ./bin "$dest"
+# 2. create settings file:
+# cd "$dest"
+if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -d "$SETTINGS_FOLDER" ]; then
+	echo "creating a folder to store settings at '$SETTINGS_FOLDER'..."
+	mkdir "$SETTINGS_FOLDER"
+	echo "calling 'sgcheck config'..."
+	eval ./bin/config
+fi
+# 3. add commands:
+# 4. add completion:
+
+
+# scriptsList="list in out edit setup"
+#setComplete "sgcheck" "" "$scriptsList"
+
+
+function _compFunc ()
+{
+	local cur prev opts base
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	COMPREPLY=( $(compgen -W "$scriptsList" -- ${cur} ) )
+	return 0
+}
+
+

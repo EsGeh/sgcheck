@@ -1,0 +1,70 @@
+#!/bin/bash
+
+
+#functions to work with files
+
+# INFO
+# the suffix ..List means: the operation does not touch the file itself,
+# but just the list of managed files kept in the settings folder
+
+# remove a file, and also remove it from the settings folder
+function removeI
+{
+	if [ "$1" == "" ] ; then
+		echo -n "enter filename: "
+		read filename
+	else
+		filename=$1
+	fi
+	echo -n "are you shure? (y/n) "
+	read answer
+	case $answer in
+		y ) ;;
+		n ) return 0 ;;
+		* ) echo "invalid input. quit current operation..." 
+			return 1 ;;
+	esac
+	remove "$filename"
+	removeFromListI "$1"
+}
+
+
+# remove the file from the settings folder, but not the file itself
+function removeFromListI
+{
+	if [ "$1" == "" ] ; then
+		echo -n "enter filename: "
+		read filename
+		echo -n "are you shure? (y/n) "
+		read answer
+		case $answer in
+			y ) ;;
+			n ) return 0 ;;
+			* ) echo "invalid input. quit current operation..." 
+				return 1 ;;
+		esac
+
+	else
+		filename="$1"
+	fi
+	
+	echo "rm $SETTINGS_FOLDER$filename.sg_descr"
+	removeFromList "$filename"
+}
+
+
+# just removes the file
+# $1: the file to remove
+# PRECONDITION: the file must exist!
+function remove ()
+{
+	rm -r "$THIS_BASE$1"
+}
+
+# remove a file from settings folder
+# $1: the file to remove
+# PRECONDITION: the file must exist!
+function removeFromList ()
+{
+	rm "$SETTINGS_FOLDER$1.sg_descr"
+}

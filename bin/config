@@ -9,76 +9,15 @@
 CMD_EXIT="exit"
 
 # include global functions
-. ./sg_check.global
+. ./bin/util/global
+. ./bin/util/settingsUtil
 
 
 # Variables
 # from the settings file:
 	
 # Functions:
-function saveSettings # save settings to file
-{
-	# cd ~
-	# mkdir .sg_check.settings
-	cd $SETTINGS_FOLDER #.sg_check.settings
-	> $SETTINGS_FILE
-	echo "SERVER=\"$SERVER\"" >> $SETTINGS_FILE
-	echo "THIS=\"$THIS\"" >> $SETTINGS_FILE
-	echo "SERVER_BASE=\"$SERVER_BASE\"" >> $SETTINGS_FILE
-	echo "THIS_BASE=\"$THIS_BASE\"" >> $SETTINGS_FILE
-}
 
-function remove
-{
-	if [ "$1" == "" ] ; then
-		echo -n "enter filename: "
-		read filename
-	else
-		filename=$1
-	fi
-	echo -n "are you shure? (y/n) "
-	read answer
-	case $answer in
-		y ) ;;
-		n ) return 0 ;;
-		* ) echo "invalid input. quit current operation..." 
-			return 1 ;;
-	esac
-	rm -r "$THIS_BASE$filename"
-	#if [ -d "THIS_BASE$filename" ] ; then
-		#echo "rmdir $THIS_BASE$filename"
-		#rmdir "$THIS_BASE$filename"
-	#elif [ -f "$THIS_BASE$filename" ] ; then # if the file is a regular file
-		#echo "rm $THIS_BASE$filename"
-		#rm "$THIS_BASE$filename"
-	#else
-		#echo "error!: $THIS_BASE$filename is neither a file or a directory!"
-		#return 1
-	#fi
-	removeFromList "$filename"
-}
-
-function removeFromList
-{
-	if [ "$1" == "" ] ; then
-		echo -n "enter filename: "
-		read filename
-		echo -n "are you shure? (y/n) "
-		read answer
-		case $answer in
-			y ) ;;
-			n ) return 0 ;;
-			* ) echo "invalid input. quit current operation..." 
-				return 1 ;;
-		esac
-
-	else
-		filename="$1"
-	fi
-	
-	echo "rm $SETTINGS_FOLDER$filename.sg_descr"
-	rm "$SETTINGS_FOLDER$filename.sg_descr"
-}
 
 # read options:
 while [ "$1" != "" ]; do
