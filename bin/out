@@ -7,7 +7,8 @@
 #THIS_BASE
 
 #include global functions
-. ./sg_check.global
+. ./bin/util/global
+. ./bin/util/filesUtil
 
 #variables
 # to be set by user input:
@@ -19,19 +20,6 @@
 	SIMULATE=0
 
 #functions:
-function addToList #$1:origin (relative to SERVER_BASE)
-{
-	local SRC="$1"
-	echo "SRC: $SRC"
-	# last component of filename:
-	local baseNameTemp=$(basename "$SRC")
-	#baseNameTemp="$($baseNameTemp)"
-	local SRC_FILE="$baseNameTemp"
-	#echo "SRC_FILE: $SRC_FILE"
-	cd "$SETTINGS_FOLDER"
-	> "$SRC_FILE.sg_descr"
-	echo "ORIGIN=\"$SRC\"" >> "$SRC_FILE.sg_descr"
-}
 
 
 RSYNC_OPTIONS="-verbose -printcmd"

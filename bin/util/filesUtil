@@ -29,6 +29,22 @@ function removeI
 }
 
 
+
+function addToList #$1:origin (relative to SERVER_BASE)
+{
+	local SRC="$1"
+	echo "SRC: $SRC"
+	# last component of filename:
+	local baseNameTemp=$(basename "$SRC")
+	#baseNameTemp="$($baseNameTemp)"
+	local SRC_FILE="$baseNameTemp"
+	#echo "SRC_FILE: $SRC_FILE"
+	cd "$SETTINGS_FOLDER"
+	> "$SRC_FILE.sg_descr"
+	echo "ORIGIN=\"$SRC\"" >> "$SRC_FILE.sg_descr"
+	return 0
+}
+
 # remove the file from the settings folder, but not the file itself
 function removeFromListI
 {

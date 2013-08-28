@@ -3,6 +3,14 @@
 
 #use 'source sgcheck.init' to set enable autocompletion
 
+# variables:
+#SETTINGS_FOLDER
+#SETTINGS_FILE
+#SERVER
+#THIS
+#SERVER_BASE
+#THIS_BASE
+
 
 CMD_EXIT="exit"
 
@@ -34,6 +42,8 @@ else
 fi
 echo "copying files..."
 cp -r ./sgcheck ./bin "$dest"
+## 2. add the wd-file:
+#echo "WORKING_DIR=\"$dest\"" > $dest/workingdir
 # 2. create settings file:
 # cd "$dest"
 if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -d "$SETTINGS_FOLDER" ]; then
