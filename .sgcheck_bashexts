@@ -3,7 +3,7 @@
 
 # constants:
 args=(config in out rm list)
-copyopts=
+copyopts=("--simulate" "--destructive" "--printcmd" "--checksum" "--list" "--verbose" "--max-depth")
 
 
 
@@ -58,9 +58,9 @@ function _compFunc ()
 						config) 
 							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings" -- $cur ) ) ;;
 						in)
-							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings $copyopts" -- $cur ) ) ;;
+							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings ${copyopts[*]}" -- $cur ) ) ;;
 						out) 
-							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings $copyopts" -- $cur ) ) ;;
+							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings ${copyopts[*]}" -- $cur ) ) ;;
 						rm) 
 							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings --file --list" -- $cur ) ) ;;
 						list) ;;
