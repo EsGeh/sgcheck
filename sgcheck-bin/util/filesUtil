@@ -1,5 +1,6 @@
 #!/bin/bash
 
+. "$SG_SCRIPT_PATH/sgcheck-bin/util/global"
 
 #functions to work with files
 
@@ -64,7 +65,6 @@ function removeFromListI
 		filename="$1"
 	fi
 	
-	echo "rm $SETTINGS_FOLDER$filename.sg_descr"
 	removeFromList "$filename"
 }
 
@@ -74,6 +74,7 @@ function removeFromListI
 # PRECONDITION: the file must exist!
 function remove ()
 {
+	echo "executing 'rm -r \"$THIS_BASE$1\"'"
 	rm -r "$THIS_BASE$1"
 }
 
@@ -82,5 +83,6 @@ function remove ()
 # PRECONDITION: the file must exist!
 function removeFromList ()
 {
+	echo "executing 'rm $SETTINGS_FOLDER$filename.sg_descr'"
 	rm "$SETTINGS_FOLDER$1.sg_descr"
 }

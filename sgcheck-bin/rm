@@ -35,6 +35,13 @@ if [ "$settingsDir" != "" ]; then
 	setSettingsFolder "$settingsDir"
 fi
 
+# load settings:
+init
+if [ $? != 0 ]; then
+	echo "settings file not found!"
+	exit 1
+fi
+
 case $mode in
 	"file") removeI ;;
 	"list") removeFromListI ;;
