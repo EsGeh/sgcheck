@@ -3,7 +3,7 @@
 #include functions to work with the settings file
 #. ./util/settingsUtil
 
-. ./sgcheck-bin/util/settingsUtil
+. $SG_SCRIPT_PATH/sgcheck-bin/util/settingsUtil
 
 
 
@@ -14,6 +14,7 @@ fi
 
 #constants:
 CMD_COPY="./bin/cp"
+errLog="$HOME/sgcheck_err.log"
 
 
 # Variables
@@ -108,6 +109,12 @@ function yesNoI ()
 		esac
 	done
 	return 0
+}
+
+function execSafe ()
+{
+	$1 &>> "$errLog" ||
+		echo "error: $(cat $errLog)" && exit 1
 }
 
 # $1: prog name

@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Setting variables (loaded by using the "init" function):
 #SETTINGS_FOLDER
 #SETTINGS_FILE
@@ -7,7 +9,7 @@
 #THIS_BASE
 
 # include global functions
-. ./sgcheck-bin/util/global
+. "$SG_SCRIPT_PATH/sgcheck-bin/util/global"
 
 #variables
 SRC=""

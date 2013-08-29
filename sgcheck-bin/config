@@ -1,3 +1,4 @@
+#!/bin/bash
 # Setting variables (loaded by using the "init" function):
 #SETTINGS_FOLDER
 #SETTINGS_FILE
@@ -9,8 +10,8 @@
 CMD_EXIT="exit"
 
 # include global functions
-. ./sgcheck-bin/util/global
-. ./sgcheck-bin/util/settingsUtil
+. $SG_SCRIPT_PATH/sgcheck-bin/util/global
+. $SG_SCRIPT_PATH/sgcheck-bin/util/settingsUtil
 
 
 # read options:

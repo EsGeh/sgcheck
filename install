@@ -14,21 +14,16 @@
 
 CMD_EXIT="exit"
 
+SG_SCRIPT_PATH=.
+
 #SUB_FOLDER=sgcheck-bin
 
 # include global functions
-. ./sgcheck-bin/util/global
-. ./sgcheck-bin/util/settingsUtil
+. $SG_SCRIPT_PATH/sgcheck-bin/util/global
+. $SG_SCRIPT_PATH/sgcheck-bin/util/settingsUtil
 
-errLog="$HOME/sgcheck_err.log"
 > "$errLog"
 
-
-function execSafe ()
-{
-	$1 &>> "$errLog" ||
-		echo "error: $(cat $errLog)" && exit 1
-}
 
 # 1. copy to a specific location:
 echo -n "specify location where to install sgcheck? "
@@ -67,6 +62,13 @@ if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -d "$SETTINGS_FOLDER" ]; then
 	echo "calling 'sgcheck config'..."
 	eval ./bin/config
 fi
+
+BASHRC=$HOME/.bashrc
+
+# 3. set
+#if [ -e $BASHRC ]; then
+echo "SG_SCRIPT_PATH=\"$dest\"" >> $BASHRC
+echo "export SG_SCRIPT_PATH" >> $BASHRC
 # 3. add commands:
 # 4. add completion:
 

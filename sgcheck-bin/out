@@ -1,3 +1,4 @@
+#!/bin/bash
 
 #SETTINGS_FOLDER
 #SETTINGS_FILE
@@ -7,8 +8,8 @@
 #THIS_BASE
 
 #include global functions
-. ./sgcheck-bin/util/global
-. ./sgcheck-bin/util/filesUtil
+. "$SG_SCRIPT_PATH/sgcheck-bin/util/global"
+. "$SG_SCRIPT_PATH/sgcheck-bin/util/filesUtil"
 
 #variables
 # to be set by user input:

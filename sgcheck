@@ -2,15 +2,25 @@
 
 subscript="$1"
 
-if [ ! "$subscript" = "" ]; then
-	_execCommand
-fi
-
 function _execCommand ()
 {
-	./bin/$subscript
+	"$SG_SCRIPT_PATH/sgcheck-bin/$1"
 }
 
+function _execCommandSafe ()
+{
+	if [ ! -e "$SG_SCRIPT_PATH/sgcheck-bin/$1" ]; then
+		echo -e "invalid command!"
+	else
+		echo "gonna execute $SG_SCRIPT_PATH/sgcheck-bin/$1"
+		_execCommand "$1"
+	fi
+}
+
+if [ ! "$subscript" = "" ]; then
+	_execCommandSafe "$subscript"
+	exit 0
+fi
 
 
 clear
@@ -26,12 +36,7 @@ until [ "selection" = "$CMD_EXIT" ]; do
 
 	echo -en "> "
 	read selection
-	if [ ! -e "./bin/$selection" ]; then
-		echo -e "invalid command!"
-	else
-		echo "gonna execute ./bin/$selection"
-		./bin/$selection
-	fi
+	_execCommandSafe "$selection"
 done
 
 

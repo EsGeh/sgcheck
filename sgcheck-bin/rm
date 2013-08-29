@@ -7,8 +7,8 @@
 #SERVER_BASE
 #THIS_BASE
 
-. ./sgcheck-bin/util/global
-. ./sgcheck-bin/util/filesUtil
+. "$SG_SCRIPT_PATH/sgcheck-bin/util/global"
+. "$SG_SCRIPT_PATH/sgcheck-bin/util/filesUtil"
 
 
 
