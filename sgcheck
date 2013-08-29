@@ -1,6 +1,5 @@
 #!/bin/bash
 
-subscript="$1"
 
 function _execCommand ()
 {
@@ -16,6 +15,9 @@ function _execCommandSafe ()
 		_execCommand "$1"
 	fi
 }
+
+
+subscript="$1"
 
 if [ ! "$subscript" = "" ]; then
 	_execCommandSafe "$subscript"

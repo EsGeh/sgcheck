@@ -14,9 +14,12 @@
 
 CMD_EXIT="exit"
 
+BASHRC=$HOME/.bashrc
+BASHEXTS=$HOME/.sgcheck_bashexts
+
+# before the program has been installed, the subscripts are in the current directory:
 SG_SCRIPT_PATH=.
 
-#SUB_FOLDER=sgcheck-bin
 
 # include global functions
 . $SG_SCRIPT_PATH/sgcheck-bin/util/global
@@ -65,31 +68,16 @@ if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -d "$SETTINGS_FOLDER" ]; then
 	eval ./bin/config
 fi
 
-BASHRC=$HOME/.bashrc
-BASHEXTS=$HOME/.sgcheck_bashexts
 
-# 3. set
-#if [ -e $BASHRC ]; then
-echo "SG_SCRIPT_PATH=\"$dest\"" >> $BASHRC
-echo "export SG_SCRIPT_PATH" >> $BASHRC
+yesNoI "is sgcheck allowed to add commands to the $BASHRC file? (registers this program to be executed via console, also adds tab completion) (recommended)"
+if [ "$__result" = "yes" ]; then
 # 3. add commands:
+	echo "SG_SCRIPT_PATH=\"$dest\"" >> $BASHRC
+	echo "export SG_SCRIPT_PATH" >> $BASHRC
 # 4. add completion:
-echo ". $BASHEXTS" >> $BASHRC
+	echo ". $BASHEXTS" >> $BASHRC
+fi
 
 
 # scriptsList="list in out edit setup"
 #setComplete "sgcheck" "" "$scriptsList"
-
-
-function _compFunc ()
-{
-	local cur prev opts base
-	COMPREPLY=()
-	cur="${COMP_WORDS[COMP_CWORD]}"
-	prev="${COMP_WORDS[COMP_CWORD-1]}"
-
-	COMPREPLY=( $(compgen -W "$scriptsList" -- ${cur} ) )
-	return 0
-}
-
-
