@@ -28,7 +28,8 @@ SG_SCRIPT_PATH=.
 # 1. copy to a specific location:
 echo -n "specify location where to install sgcheck? "
 read dest
-eval "dest=$(echo $dest)"
+# expand '~', variables, ...:
+eval "dest=$(echo $dest)" # <- this might be quiet unsafe !!
 echo "$dest"
 if [ ! -e "$dest" ]; then
 	echo -n "dest doesn't exist. create (y/n)? "
@@ -52,6 +53,7 @@ fi
 echo "copying files..."
 cp ./sgcheck "$dest"
 cp -r ./sgcheck-bin "$dest"
+cp ./.sgcheck_bashexts "$HOME"
 ## 2. add the wd-file:
 #echo "WORKING_DIR=\"$dest\"" > $dest/workingdir
 # 2. create settings file:
@@ -64,6 +66,7 @@ if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -d "$SETTINGS_FOLDER" ]; then
 fi
 
 BASHRC=$HOME/.bashrc
+BASHEXTS=$HOME/.sgcheck_bashexts
 
 # 3. set
 #if [ -e $BASHRC ]; then
@@ -71,6 +74,7 @@ echo "SG_SCRIPT_PATH=\"$dest\"" >> $BASHRC
 echo "export SG_SCRIPT_PATH" >> $BASHRC
 # 3. add commands:
 # 4. add completion:
+echo ". $BASHEXTS" >> $BASHRC
 
 
 # scriptsList="list in out edit setup"

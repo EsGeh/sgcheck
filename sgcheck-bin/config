@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # Setting variables (loaded by using the "init" function):
 #SETTINGS_FOLDER
 #SETTINGS_FILE

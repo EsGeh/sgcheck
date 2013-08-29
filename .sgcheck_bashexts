@@ -1,0 +1,44 @@
+# add tab completion for sgcheck
+
+
+opts="--settings"
+args=(config in out)
+function _argsWithOr ()
+{
+	for i in ${!args[*]}; do
+		#echo $i
+		if [ $i = 0 ]; then
+			echo "${args[i]}"
+		else
+			echo " || "
+			echo "${args[i]}"
+		fi
+	done
+}
+
+function _compFunc ()
+{
+	local cur prev
+	COMPREPLY=()
+
+	cur=${COMP_WORDS[COMP_CWORD]}
+	prev=${COMP_WORDS[COMP_CWORD-1]}
+
+	case "$prev" in
+		sgcheck) COMPREPLY=( $(compgen -W "${args[*]}" -- $cur ) );;
+		*)
+			arrayWithoutPrev=("${args[@]/$prev/}")
+			# only go on if prev is a valid command:
+			if [ ! "${arrayWithoutPrev[*]}" = "${args[*]}" ]; then
+				# add options for every subscript:
+				COMPREPLY=( $(compgen -W "--settings" -- $cur ) ) 
+				case "$cur" in
+					*) COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "$opts" -- $cur ) ) ;;
+				esac
+			fi
+		;;
+	esac
+
+}
+
+complete -F _compFunc sgcheck
