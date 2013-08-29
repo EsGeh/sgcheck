@@ -1,0 +1,14 @@
+
+
+
+all commands can be executed from the command line using the following syntax:
+
+'sgcheck <command> [<options>]'
+
+which options are available depends on the <command>. The following list shows every command with its options:
+
+config
+out
+in
+rm
+list
