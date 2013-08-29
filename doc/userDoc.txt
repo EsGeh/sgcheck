@@ -43,5 +43,7 @@ Now, remove the changes done to '~/.bashrc':
 		## added by sgcheck ###########################
 		...
 		## added by sgcheck ###########################
+remove the programs settings:
+	'rm -r .sgcheck-settings'
 
 4. Files

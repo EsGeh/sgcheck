@@ -8,7 +8,7 @@
 
 
 if [ "$SETTINGS_FOLDER" = "" ]; then
-	SETTINGS_FOLDER="$HOME/.sg_check.settings/"
+	SETTINGS_FOLDER="$HOME/.sgcheck-settings/"
 	SETTINGS_FILE="$SETTINGS_FOLDER""settings"
 fi
 

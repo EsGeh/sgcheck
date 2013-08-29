@@ -57,15 +57,14 @@ echo "copying files..."
 cp ./sgcheck "$dest"
 cp -r ./sgcheck-bin "$dest"
 cp ./.sgcheck_bashexts "$HOME"
-## 2. add the wd-file:
-#echo "WORKING_DIR=\"$dest\"" > $dest/workingdir
-# 2. create settings file:
-# cd "$dest"
-if [ ! -e "$SETTINGS_FOLDER" ] || [ ! -d "$SETTINGS_FOLDER" ]; then
+
+# add the settings folder, if not yet existing:
+#echo "settings folder: $SETTINGS_FOLDER"
+if [ ! -d "$SETTINGS_FOLDER" ]; then #|| [ ! -d "$SETTINGS_FOLDER" ]; then
 	echo "creating a folder to store settings at '$SETTINGS_FOLDER'..."
 	mkdir "$SETTINGS_FOLDER"
 	echo "calling 'sgcheck config'..."
-	eval ./bin/config
+	eval $SG_SCRIPT_PATH/sgcheck-bin/config
 fi
 
 
