@@ -78,6 +78,8 @@ if [ "$__result" = "yes" ]; then
 	echo ". $BASHEXTS" >> $BASHRC
 fi
 
+echo "installation completed successfully"
+
 
 # scriptsList="list in out edit setup"
 #setComplete "sgcheck" "" "$scriptsList"

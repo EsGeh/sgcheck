@@ -13,7 +13,7 @@ if [ "$SETTINGS_FOLDER" = "" ]; then
 fi
 
 #constants:
-CMD_COPY="./bin/cp"
+CMD_COPY="$SG_SCRIPT_PATH/sgcheck-bin/cp"
 errLog="$HOME/sgcheck_err.log"
 
 
