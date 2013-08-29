@@ -2,3 +2,4 @@
 
 Known bugs:
 	when executing 'sgcheck in' or 'sgcheck out' and then selecting '--simulate' with the interactive mode of 'sgcheck-bin/cp' the file is added to the list of managed files
+	when executing a command, that uses 'sgcheck cp' (e.g.: 'sgcheck in','sgcheck out'), command line options like '--simulate' are not passed through to 'sgcheck cp'
