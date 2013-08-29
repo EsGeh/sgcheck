@@ -5,8 +5,8 @@
 #SERVER_BASE
 #THIS_BASE
 
-. ./bin/util/global
-. ./bin/util/filesUtil
+. ./sgcheck-bin/util/global
+. ./sgcheck-bin/util/filesUtil
 
 CMD_EXIT="exit"
 	

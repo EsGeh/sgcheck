@@ -5,7 +5,7 @@
 #SERVER_BASE
 #THIS_BASE
 
-. ./bin/util/global
+. ./sgcheck-bin/util/global
 
 CMD_EXIT="exit"
 

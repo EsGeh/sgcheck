@@ -9,8 +9,8 @@
 CMD_EXIT="exit"
 
 # include global functions
-. ./bin/util/global
-. ./bin/util/settingsUtil
+. ./sgcheck-bin/util/global
+. ./sgcheck-bin/util/settingsUtil
 
 
 # read options:

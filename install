@@ -14,18 +14,32 @@
 
 CMD_EXIT="exit"
 
+#SUB_FOLDER=sgcheck-bin
+
 # include global functions
-. ./bin/util/global
-. ./bin/util/settingsUtil
+. ./sgcheck-bin/util/global
+. ./sgcheck-bin/util/settingsUtil
+
+errLog="$HOME/sgcheck_err.log"
+> "$errLog"
+
+
+function execSafe ()
+{
+	$1 &>> "$errLog" ||
+		echo "error: $(cat $errLog)" && exit 1
+}
 
 # 1. copy to a specific location:
 echo -n "specify location where to install sgcheck? "
 read dest
+eval "dest=$(echo $dest)"
+echo "$dest"
 if [ ! -e "$dest" ]; then
 	echo -n "dest doesn't exist. create (y/n)? "
 	read input
 	if [ "$input" = "y" ]; then
-		mkdir "$dest"
+		execSafe "mkdir \"$dest\""
 	else if [ "$input" = "n" ]; then
 		echo "installation aborted"
 		exit 1
@@ -41,7 +55,8 @@ else
 	fi
 fi
 echo "copying files..."
-cp -r ./sgcheck ./bin "$dest"
+cp ./sgcheck "$dest"
+cp -r ./sgcheck-bin "$dest"
 ## 2. add the wd-file:
 #echo "WORKING_DIR=\"$dest\"" > $dest/workingdir
 # 2. create settings file:

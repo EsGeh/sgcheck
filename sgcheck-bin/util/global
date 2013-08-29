@@ -3,7 +3,7 @@
 #include functions to work with the settings file
 #. ./util/settingsUtil
 
-. ./bin/util/settingsUtil
+. ./sgcheck-bin/util/settingsUtil
 
 
 

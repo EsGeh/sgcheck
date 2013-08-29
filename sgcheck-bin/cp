@@ -7,7 +7,7 @@
 #THIS_BASE
 
 # include global functions
-. ./bin/util/global
+. ./sgcheck-bin/util/global
 
 #variables
 SRC=""
