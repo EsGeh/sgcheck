@@ -81,7 +81,7 @@ if [ $interactive != "0" ]; then
 	echo -en "enter a folder/file to check in:\n$THIS_BASE"
 	read SRC
 	echo "enter additional options:"
-	echo "-destructive, -simulate(, or nothing)"
+	echo "--destructive, --simulate(, or nothing)"
 	read RSYNC_OPTIONS_
 	RSYNC_OPTIONS="$RSYNC_OPTIONS"" $RSYNC_OPTIONS_"
 fi
