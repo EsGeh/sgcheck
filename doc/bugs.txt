@@ -1,0 +1,4 @@
+
+
+Known bugs:
+	when executing 'sgcheck in' or 'sgcheck out' and then selecting '--simulate' with the interactive mode of 'sgcheck-bin/cp' the file is added to the list of managed files
