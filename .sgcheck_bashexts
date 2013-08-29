@@ -1,8 +1,12 @@
 # add tab completion for sgcheck
 
 
-opts="--settings"
-args=(config in out)
+# constants:
+args=(config in out rm list)
+copyopts=
+
+
+
 function _argsWithOr ()
 {
 	for i in ${!args[*]}; do
@@ -27,15 +31,25 @@ function _compFunc ()
 	case "$prev" in
 		sgcheck) COMPREPLY=( $(compgen -W "${args[*]}" -- $cur ) );;
 		*)
-			arrayWithoutPrev=("${args[@]/$prev/}")
-			# only go on if prev is a valid command:
-			if [ ! "${arrayWithoutPrev[*]}" = "${args[*]}" ]; then
-				# add options for every subscript:
-				COMPREPLY=( $(compgen -W "--settings" -- $cur ) ) 
-				case "$cur" in
-					*) COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "$opts" -- $cur ) ) ;;
+			if [ $COMP_CWORD -ge 2 ]; then
+				case "${COMP_WORDS[1]}" in
+					config) 
+						COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings" -- $cur ) ) ;;
+					in)
+						COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings $copyopts" -- $cur ) ) ;;
+					out) 
+						COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings $copyopts" -- $cur ) ) ;;
+					rm) 
+						COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings --file --list" -- $cur ) ) ;;
+					list) ;;
 				esac
 			fi
+			#arrayWithoutPrev=("${args[@]/$prev/}")
+			# only go on if prev is a valid command:
+			#if [ ! "${arrayWithoutPrev[*]}" = "${args[*]}" ]; then
+				# add options for every subscript:
+				#COMPREPLY=( $(compgen -W "--settings" -- $cur ) ) 
+			#fi
 		;;
 	esac
 
