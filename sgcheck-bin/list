@@ -112,7 +112,7 @@ while [ "$1" != "" ]; do
 			details=1
 			# echo "details enabled!"
 			;;
-		* ) echo "unknown option!" ; exit 1
+		* ) echo "unknown option '$1'!" ; exit 1
 	esac
 	shift
 done

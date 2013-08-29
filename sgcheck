@@ -3,7 +3,7 @@
 
 function _execCommand ()
 {
-	"$SG_SCRIPT_PATH/sgcheck-bin/$1"
+	"$SG_SCRIPT_PATH/sgcheck-bin/$1" $2 # <- no " here, so it expands to possibly more than one option!
 }
 
 function _execCommandSafe ()
@@ -11,16 +11,19 @@ function _execCommandSafe ()
 	if [ ! -e "$SG_SCRIPT_PATH/sgcheck-bin/$1" ]; then
 		echo -e "invalid command!"
 	else
-		echo "gonna execute $SG_SCRIPT_PATH/sgcheck-bin/$1"
-		_execCommand "$1"
+		echo "gonna execute $SG_SCRIPT_PATH/sgcheck-bin/$1 $2"
+		_execCommand "$1" "$2"
 	fi
 }
 
 
+# all parameters as one single string:
+allArgs=( "$@" )
 subscript="$1"
+subscript_opts=( "${allArgs[@]:1 }" )
 
 if [ ! "$subscript" = "" ]; then
-	_execCommandSafe "$subscript"
+	_execCommandSafe "$subscript" "${subscript_opts[*]}"
 	exit 0
 fi
 
