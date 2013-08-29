@@ -1,14 +1,47 @@
 
 
+contents:
+	1. Installation
+	2. Usage
+	3. Uninstallation information
+	4. Files
+
+1. Installation
+
+	go to the directory, where the you put the source.
+	execute:
+		'./install'
+
+
+2. Usage
 
 all commands can be executed from the command line using the following syntax:
 
 'sgcheck <command> [<options>]'
 
-which options are available depends on the <command>. The following list shows every command with its options:
+which options are available depends on the <command>.  For more details, execute
+	'sgcheck <command> --help'
+The following list shows every command with its explanation.
 
 config
 out
 in
 rm
 list
+
+
+3. Uninstallation Information
+
+be <dst> the directory, where the program is installed (you chose it during installation).
+	'rm <dst>/sgcheck'
+	'rm -r <dst>/sgcheck-bin'
+	'rm ~/.sgcheck_bashexts'
+Now, remove the changes done to '~/.bashrc':
+	open ~/.bashrc with a text editor (e.g.: 'vim ~/.bashrc')
+	delete the following lines:
+
+		## added by sgcheck ###########################
+		...
+		## added by sgcheck ###########################
+
+4. Files

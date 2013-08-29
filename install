@@ -71,11 +71,13 @@ fi
 
 yesNoI "is sgcheck allowed to add commands to the $BASHRC file? (registers this program to be executed via console, also adds tab completion) (recommended)"
 if [ "$__result" = "yes" ]; then
+	echo "## added by sgcheck ###########################" >> $BASHRC
 # 3. add commands:
 	echo "SG_SCRIPT_PATH=\"$dest\"" >> $BASHRC
 	echo "export SG_SCRIPT_PATH" >> $BASHRC
 # 4. add completion:
 	echo ". $BASHEXTS" >> $BASHRC
+	echo "## added by sgcheck ###########################" >> $BASHRC
 fi
 
 echo "installation completed successfully"
