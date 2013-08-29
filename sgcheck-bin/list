@@ -60,7 +60,7 @@ function listFiles
 			fi
 			count=$((count + 1))
 		#done < <($CMD_COPY -simulate -list -max-depth "$THIS_BASE$filename" "$originDir" | sed '/^\./d')
-		done < <($CMD_COPY -simulate -list "$THIS_BASE$filename" "$originDir")
+		done < <($CMD_COPY --simulate --list "$THIS_BASE$filename" "$originDir")
 		if [ $hasChanged = 1 ]; then
 			if [ $count -gt $countMax ]; then
 				echo -en "\t...\n"
@@ -89,7 +89,7 @@ function listFiles
 			fi
 				
 			count=$((count + 1))
-		done < <($CMD_COPY -simulate -list -max-depth "$origin" "$THIS_BASE" | sed '/^\./d' )
+		done < <($CMD_COPY --simulate --list --max-depth "$origin" "$THIS_BASE" | sed '/^\./d' )
 		if [ $hasChanged = 1 ]; then
 			if [ $count -gt $countMax ]; then
 				echo -en "\t...\n"
@@ -107,7 +107,7 @@ while [ "$1" != "" ]; do
 			shift
 			settingsDir="$1"
 			;;
-		"-details" )
+		"--details" )
 			shift
 			details=1
 			# echo "details enabled!"

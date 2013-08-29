@@ -63,7 +63,8 @@ function _compFunc ()
 							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings ${copyopts[*]}" -- $cur ) ) ;;
 						rm) 
 							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings --file --list" -- $cur ) ) ;;
-						list) ;;
+						list)
+							COMPREPLY=( ${COMPREPLY[*]} $(compgen -W "--settings --details" -- $cur ) ) ;;
 					esac
 				fi
 			fi

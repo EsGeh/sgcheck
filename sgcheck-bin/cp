@@ -54,26 +54,26 @@ if [ $# -gt 0 ]; then
 					shift
 					settingsDir="$1"
 					;;
-				"-printcmd" )
+				"--printcmd" )
 					PRINT_CMD=1
 					;;
-				"-destructive")
+				"--destructive")
 					#echo "settings options for update!"
 					RSYNC_OPTIONS="$RSYNC_OPTIONS"" --delete"
 					;;
-				"-simulate" )
+				"--simulate" )
 					RSYNC_OPTIONS="$RSYNC_OPTIONS"" -n"
 					;;
-				"-checksum" )
+				"--checksum" )
 					RSYNC_OPTIONS="$RSYNC_OPTIONS"" -c --ignore-times"
 					;;
-				"-list" )
+				"--list" )
 					RSYNC_OPTIONS="$RSYNC_OPTIONS"" --out-format=""%i%n"
 					;;
-				"-verbose" )
+				"--verbose" )
 					RSYNC_OPTIONS="$RSYNC_OPTIONS"" -v --progress"
 					;;
-				"-max-depth" )
+				"--max-depth" )
 					RSYNC_OPTIONS="$RSYNC_OPTIONS"" --exclude=/*/*/*/*"
 					;;
 				*) echo "\"$1\": option not found!"

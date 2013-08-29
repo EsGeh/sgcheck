@@ -23,7 +23,7 @@
 #functions:
 
 
-RSYNC_OPTIONS="-verbose -printcmd"
+RSYNC_OPTIONS="--verbose --printcmd"
 # read params:
 interactive="1"
 if [ $# -gt 0 ]; then
