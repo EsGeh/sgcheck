@@ -36,17 +36,7 @@ if [ $# -gt 0 ]; then
 				;;
 			* )
 				RSYNC_OPTIONS="$RSYNC_OPTIONS"" $1"
-				interactive="0"
-				
-			#"-destructive")
-				#echo "settings options for update!"
-				#RSYNC_OPTIONS="$RSYNC_OPTIONS"" --delete"
-				#;;
-			#"-simulate" )
-				#RSYNC_OPTIONS="$RSYNC_OPTIONS"" --list-only"
-				#SIMULATE=1
-				#;;
-			#*) break # echo "\"$1\": option not found!"
+				#interactive="0"
 		esac
 		shift
 	done
